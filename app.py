@@ -176,9 +176,17 @@ def editar_producto(id):
 def eliminar_producto(id):
     try:
         producto = Producto.query.get_or_404(id)
-        # Verificar que no tenga dependencias en compras/ventas (opcional)
+        
+        # 1. Eliminar detalles de compras asociados a este producto
+        DetalleCompra.query.filter_by(id_producto=id).delete()
+        
+        # 2. Eliminar detalles de ventas asociados a este producto
+        DetalleVenta.query.filter_by(id_producto=id).delete()
+        
+        # 3. Ahora eliminar el producto (ya no tiene dependencias)
         db.session.delete(producto)
         db.session.commit()
+        
         flash('Producto eliminado correctamente', 'success')
     except Exception as e:
         db.session.rollback()
