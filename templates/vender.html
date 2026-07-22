@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar Venta{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-hand-holding-usd" style="background: none; -webkit-text-fill-color: #4f46e5; margin-right: 8px;"></i> Registrar Venta</h1>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-user"></i> Datos del cliente</div>
+    <form method="POST" id="ventaForm">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+            <div>
+                <label style="font-weight: 500; display: block; margin-bottom: 4px;">Nombre</label>
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+            </div>
+            <div>
+                <label style="font-weight: 500; display: block; margin-bottom: 4px;">Apellido</label>
+                <input type="text" name="apellido" class="form-control" placeholder="Apellido">
+            </div>
+        </div>
+        <div style="margin-bottom: 16px;">
+            <label style="font-weight: 500; display: block; margin-bottom: 4px;">Teléfono</label>
+            <input type="text" name="telefono" class="form-control" placeholder="Teléfono (opcional)">
+        </div>
+
+        <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin: 20px 0;">
+
+        <div class="card-title"><i class="fas fa-shopping-bag"></i> Productos</div>
+        <div id="productosContainer">
+            <!-- Producto 1 (modelo) -->
+            <div class="producto-card" data-index="0">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-weight: 600; color: #4f46e5;">Producto #1</span>
+                    <button type="button" class="btn-remove-producto" aria-label="Eliminar producto">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="font-weight: 500; display: block; margin-bottom: 4px;">Producto *</label>
+                    <select name="producto_id[]" class="form-control producto-select" required>
+                        <option value="">Seleccionar producto</option>
+                        {% for p in productos %}
+                        <option value="{{ p.id }}" data-precio="{{ p.precio_por_kilo }}" data-stock="{{ p.stock_actual }}">{{ p.nombre }} (Stock: {{ p.stock_actual }} kg)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="font-weight: 500; display: block; margin-bottom: 4px;">Precio por kg (€)</label>
+                    <input type="text" class="form-control precio-unitario" value="0.00" readonly style="background: rgba(200,200,200,0.2);">
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <label style="font-weight: 500; display: block; margin-bottom: 4px;">Cantidad (kg) *</label>
+                    <input type="number" step="0.01" name="cantidad[]" class="form-control cantidad" placeholder="0.00" required>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <label style="font-weight: 500; display: block; margin-bottom: 4px;">Subtotal (€)</label>
+                    <input type="text" class="form-control subtotal" value="0.00" readonly style="background: rgba(200,200,200,0.2);">
+                </div>
+                <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin: 16px 0;">
+            </div>
+        </div>
+
+        <!-- Botón agregar producto -->
+        <div style="display: flex; gap: 12px; margin: 16px 0;">
+            <button type="button" id="addProductoBtn" class="btn btn-primary" style="flex: 1; background: rgba(79,70,229,0.15); color:#4f46e5; border: 1px solid rgba(79,70,229,0.3);">
+                <i class="fas fa-plus"></i> Agregar producto
+            </button>
+        </div>
+
+        <!-- Observaciones -->
+        <div style="margin-bottom: 16px;">
+            <label for="observaciones" style="font-weight: 600; display: block; margin-bottom: 6px;">Observaciones</label>
+            <textarea id="observaciones" name="observaciones" class="form-control" rows="2" placeholder="Notas adicionales (opcional)"></textarea>
+        </div>
+
+        <!-- Botón guardar -->
+        <button type="submit" class="btn btn-success" style="background: rgba(16,185,129,0.2); color:#059669; border-color: rgba(16,185,129,0.3);">
+            <i class="fas fa-save"></i> Guardar venta
+        </button>
+    </form>
+</div>
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-top:16px;">
+    <i class="fas fa-arrow-left"></i> Volver al panel
+</a>
+
+<!-- JavaScript dinámico -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('productosContainer');
+        const addBtn = document.getElementById('addProductoBtn');
+        let productCount = container.children.length;
+
+        // Función para actualizar subtotal en una fila
+        function updateSubtotal(row) {
+            const select = row.querySelector('.producto-select');
+            const precioInput = row.querySelector('.precio-unitario');
+            const cantidadInput = row.querySelector('.cantidad');
+            const subtotalInput = row.querySelector('.subtotal');
+
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                const precio = parseFloat(selectedOption.dataset.precio) || 0;
+                precioInput.value = precio.toFixed(2);
+                const cantidad = parseFloat(cantidadInput.value) || 0;
+                const subtotal = precio * cantidad;
+                subtotalInput.value = subtotal.toFixed(2);
+            } else {
+                precioInput.value = '0.00';
+                subtotalInput.value = '0.00';
+            }
+        }
+
+        // Event listeners para cambios en select y cantidad
+        function attachEvents(row) {
+            const select = row.querySelector('.producto-select');
+            const cantidad = row.querySelector('.cantidad');
+            select.addEventListener('change', function() { updateSubtotal(row); });
+            cantidad.addEventListener('input', function() { updateSubtotal(row); });
+        }
+
+        // Inicializar primera fila
+        const firstRow = container.children[0];
+        attachEvents(firstRow);
+        // Forzar actualización inicial
+        updateSubtotal(firstRow);
+
+        // Función para crear nueva fila
+        function createProductoBlock() {
+            const template = container.children[0].cloneNode(true);
+            // Limpiar valores
+            template.querySelectorAll('input').forEach(input => {
+                if (input.classList.contains('precio-unitario') || input.classList.contains('subtotal')) {
+                    input.value = '0.00';
+                } else {
+                    input.value = '';
+                }
+            });
+            template.querySelector('select').selectedIndex = 0;
+            // Actualizar número
+            const label = template.querySelector('span');
+            if (label) {
+                productCount++;
+                label.textContent = `Producto #${productCount}`;
+            }
+            // Configurar botón eliminar
+            const removeBtn = template.querySelector('.btn-remove-producto');
+            removeBtn.addEventListener('click', function() {
+                if (container.children.length > 1) {
+                    template.remove();
+                } else {
+                    alert('Debe haber al menos un producto.');
+                }
+            });
+            // Adjuntar eventos
+            attachEvents(template);
+            // Actualizar subtotal inicial
+            updateSubtotal(template);
+            return template;
+        }
+
+        addBtn.addEventListener('click', function() {
+            const newBlock = createProductoBlock();
+            container.appendChild(newBlock);
+        });
+
+        // Configurar el botón eliminar del primer producto
+        const firstRemoveBtn = container.querySelector('.btn-remove-producto');
+        firstRemoveBtn.addEventListener('click', function() {
+            if (container.children.length > 1) {
+                firstRemoveBtn.closest('.producto-card').remove();
+            } else {
+                alert('Debe haber al menos un producto.');
+            }
+        });
+    });
+</script>
+
+<!-- Estilos específicos (se integran con global) -->
+<style>
+    .producto-card {
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 16px;
+        border: 1px solid rgba(255,255,255,0.4);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .form-control {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.08);
+        background: rgba(255,255,255,0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        font-size: 1rem;
+        transition: border 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+    }
+    .btn-remove-producto {
+        background: none;
+        border: none;
+        color: #ef4444;
+        font-size: 1.4rem;
+        padding: 4px 8px;
+        transition: color 0.2s;
+        touch-action: manipulation;
+        cursor: pointer;
+    }
+    .btn-remove-producto:hover {
+        color: #dc2626;
+    }
+    label {
+        font-size: 0.9rem;
+        color: #1e293b;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid rgba(0,0,0,0.06);
+        margin: 16px 0;
+    }
+    @media (max-width: 480px) {
+        .producto-card {
+            padding: 12px;
+        }
+        .form-control {
+            font-size: 0.9rem;
+            padding: 10px 12px;
+        }
+        .btn-remove-producto {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}

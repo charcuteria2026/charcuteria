@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-chart-bar" style="background: none; -webkit-text-fill-color: #4f46e5; margin-right: 8px;"></i> Reportes</h1>
+
+<!-- Tarjetas de resumen -->
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+    <div class="card" style="text-align: center; padding: 16px 8px; background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2);">
+        <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Gastos</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: #ef4444;">€{{ "%.2f"|format(total_compras) }}</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 16px 8px; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2);">
+        <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Ingresos</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: #059669;">€{{ "%.2f"|format(total_ventas) }}</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 16px 8px; background: rgba(79,70,229,0.08); border-color: rgba(79,70,229,0.2);">
+        <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Ganancia Neta</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: #4f46e5;">€{{ "%.2f"|format(ganancia_neta) }}</div>
+    </div>
+</div>
+
+<!-- Gráfico + tarjetas de acceso -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+    <!-- Gráfico circular -->
+    <div class="card" style="padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+        <canvas id="reportChart" width="200" height="200" style="max-width: 100%; height: auto;"></canvas>
+        <div style="font-size: 0.75rem; color: #64748b; margin-top: 8px;">Proporción de movimientos</div>
+    </div>
+    
+    <!-- Tarjetas de acceso a reportes detallados -->
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+        <a href="{{ url_for('reporte_compras') }}" class="card" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px; padding: 16px; background: rgba(79,70,229,0.06); border: 1px solid rgba(79,70,229,0.15); flex:1;">
+            <i class="fas fa-shopping-cart" style="font-size: 1.8rem; color: #4f46e5;"></i>
+            <div>
+                <div style="font-weight: 600;">Compras</div>
+                <div style="font-size: 0.8rem; color: #64748b;">{{ num_compras }} registros</div>
+            </div>
+            <i class="fas fa-chevron-right" style="margin-left: auto; color: #94a3b8;"></i>
+        </a>
+        <a href="{{ url_for('reporte_ventas') }}" class="card" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px; padding: 16px; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15); flex:1;">
+            <i class="fas fa-hand-holding-usd" style="font-size: 1.8rem; color: #059669;"></i>
+            <div>
+                <div style="font-weight: 600;">Ventas</div>
+                <div style="font-size: 0.8rem; color: #64748b;">{{ num_ventas }} registros</div>
+            </div>
+            <i class="fas fa-chevron-right" style="margin-left: auto; color: #94a3b8;"></i>
+        </a>
+    </div>
+</div>
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-top:8px;">
+    <i class="fas fa-arrow-left"></i> Volver al panel
+</a>
+
+<!-- Script para el gráfico con Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('reportChart').getContext('2d');
+        const totalCompras = {{ total_compras|float }};
+        const totalVentas = {{ total_ventas|float }};
+        
+        // Si ambos son cero, mostramos un mensaje en el gráfico
+        const hasData = (totalCompras + totalVentas) > 0;
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Compras (gastos)', 'Ventas (ingresos)'],
+                datasets: [{
+                    data: hasData ? [totalCompras, totalVentas] : [1, 1],
+                    backgroundColor: ['#ef4444', '#059669'],
+                    borderColor: ['#ffffff', '#ffffff'],
+                    borderWidth: 2,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 10,
+                            padding: 12,
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

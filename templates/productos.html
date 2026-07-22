@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Productos{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-boxes" style="background: none; -webkit-text-fill-color: #4f46e5; margin-right: 8px;"></i> Gestión de Productos</h1>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-list"></i> Productos existentes</div>
+    <p style="font-size: 0.9rem; color: #64748b;">Aquí puedes editar o eliminar productos. Para agregar nuevos productos, ve a <strong>Compra</strong>.</p>
+    
+    {% if productos %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th style="text-align: center;">€/kg</th>
+                        <th style="text-align: center;">Stock (kg)</th>
+                        <th style="text-align: center; width: 80px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in productos %}
+                    <tr>
+                        <td><strong>{{ p.nombre }}</strong></td>
+                        <td>{{ p.descripcion or '' }}</td>
+                        <td style="text-align: center;">{{ p.precio_por_kilo }}</td>
+                        <td style="text-align: center;">{{ p.stock_actual }}</td>
+                        <td style="text-align: center;">
+                            <a href="{{ url_for('editar_producto', id=p.id) }}" class="btn-icon" aria-label="Editar">
+                                <i class="fas fa-edit" style="color: #4f46e5;"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('eliminar_producto', id=p.id) }}" style="display: inline-block; margin-left: 4px;" onsubmit="return confirm('¿Eliminar {{ p.nombre }}? Esta acción es irreversible.')">
+                                <button type="submit" class="btn-icon" aria-label="Eliminar" style="background: none; border: none; cursor: pointer;">
+                                    <i class="fas fa-trash-alt" style="color: #ef4444;"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 30px 20px; color: #64748b;">
+            <i class="fas fa-inbox" style="font-size: 2.5rem; display: block; margin-bottom: 12px;"></i>
+            No hay productos registrados aún. Ve a <strong>Compra</strong> para agregar.
+        </div>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-top:16px;">
+    <i class="fas fa-arrow-left"></i> Volver al panel
+</a>
+
+<style>
+    /* Estilos específicos para la tabla de productos */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        min-width: 400px;
+    }
+    .table th {
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(4px);
+        padding: 12px 8px;
+        text-align: left;
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .table td {
+        padding: 10px 8px;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        vertical-align: middle;
+    }
+    .btn-icon {
+        font-size: 1.3rem;
+        padding: 4px 6px;
+        transition: transform 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: manipulation;
+    }
+    .btn-icon:active {
+        transform: scale(0.85);
+    }
+    @media (max-width: 480px) {
+        .table td, .table th {
+            padding: 8px 4px;
+            font-size: 0.8rem;
+        }
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+        .table {
+            min-width: 300px;
+        }
+    }
+</style>
+{% endblock %}

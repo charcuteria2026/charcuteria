@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Reporte Detallado - Ventas{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-hand-holding-usd" style="background: none; -webkit-text-fill-color: #4f46e5; margin-right: 8px;"></i> Reporte de Ventas</h1>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-list"></i> Todas las ventas</div>
+    
+    {% if ventas %}
+        {% for venta in ventas %}
+        <div class="reporte-item" style="margin-bottom: 24px; background: rgba(255,255,255,0.3); border-radius: 16px; padding: 16px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.4);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                <div>
+                    <strong style="font-size: 1.1rem; color: #0f172a;">Venta #{{ venta.id }}</strong>
+                    <div style="font-size: 0.85rem; color: #64748b;">
+                        <i class="fas fa-calendar-alt"></i> {{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="background: #059669; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 1rem;">
+                        Total: €{{ venta.total }}
+                    </span>
+                </div>
+            </div>
+            
+            {% if venta.cliente %}
+            <div style="margin-bottom: 8px; font-size: 0.95rem;">
+                <i class="fas fa-user" style="color: #059669; width: 20px;"></i> 
+                <strong>Cliente:</strong> {{ venta.cliente }}
+            </div>
+            {% endif %}
+            
+            {% if venta.observaciones %}
+            <div style="margin-bottom: 12px; font-size: 0.9rem; color: #475569;">
+                <i class="fas fa-comment" style="color: #059669; width: 20px;"></i> 
+                {{ venta.observaciones }}
+            </div>
+            {% endif %}
+            
+            <div style="margin-top: 12px;">
+                <div style="font-weight: 600; font-size: 0.9rem; color: #1e293b; margin-bottom: 8px;">
+                    <i class="fas fa-boxes"></i> Productos vendidos:
+                </div>
+                <div style="background: rgba(255,255,255,0.2); border-radius: 12px; padding: 8px; overflow-x: auto;">
+                    <table style="width: 100%; font-size: 0.9rem; border-collapse: collapse; min-width: 300px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                                <th style="text-align: left; padding: 8px 4px;">Producto</th>
+                                <th style="text-align: center; padding: 8px 4px;">Cantidad (kg)</th>
+                                <th style="text-align: center; padding: 8px 4px;">Precio €/kg</th>
+                                <th style="text-align: right; padding: 8px 4px;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in venta.detalles %}
+                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.03);">
+                                <td style="padding: 8px 4px;">
+                                    {{ detalle.producto.nombre }}
+                                    <span style="font-size: 0.75rem; color: #64748b; display: block;">{{ detalle.producto.descripcion or '' }}</span>
+                                </td>
+                                <td style="text-align: center; padding: 8px 4px;">{{ detalle.cantidad }}</td>
+                                <td style="text-align: center; padding: 8px 4px;">{{ detalle.precio_unitario }}</td>
+                                <td style="text-align: right; padding: 8px 4px; font-weight: 500;">€{{ detalle.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr style="border-top: 2px solid rgba(0,0,0,0.08);">
+                                <td colspan="3" style="text-align: right; padding: 10px 4px; font-weight: 600;">Total venta:</td>
+                                <td style="text-align: right; padding: 10px 4px; font-weight: 700; color: #059669;">€{{ venta.total }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                {% if venta.comprobante %}
+                    <a href="{{ url_for('static', filename='uploads/comprobantes/' + venta.comprobante) }}" target="_blank" class="btn btn-outline-primary" style="flex: 1; background: transparent; border-color: #4f46e5; color: #4f46e5; padding: 8px 12px; font-size: 0.9rem;">
+                        <i class="fas fa-file"></i> Ver comprobante
+                    </a>
+                {% endif %}
+                <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; {% if venta.pagado %}background: rgba(16,185,129,0.15); color: #059669;{% else %}background: rgba(245,158,11,0.15); color: #d97706;{% endif %}">
+                    {% if venta.pagado %}Pagado{% else %}Pendiente{% endif %}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 40px 20px; color: #64748b;">
+            <i class="fas fa-inbox" style="font-size: 3rem; display: block; margin-bottom: 16px;"></i>
+            No hay ventas registradas aún.
+        </div>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('reportes') }}" class="btn btn-secondary" style="margin-top:16px;">
+    <i class="fas fa-arrow-left"></i> Volver a reportes
+</a>
+{% endblock %}

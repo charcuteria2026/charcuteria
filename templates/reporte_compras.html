@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Reporte Detallado - Compras{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-shopping-cart" style="background: none; -webkit-text-fill-color: #4f46e5; margin-right: 8px;"></i> Reporte de Compras</h1>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-list"></i> Todas las compras</div>
+    
+    {% if compras %}
+        {% for compra in compras %}
+        <div class="reporte-item" style="margin-bottom: 24px; background: rgba(255,255,255,0.3); border-radius: 16px; padding: 16px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.4);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                <div>
+                    <strong style="font-size: 1.1rem; color: #0f172a;">Compra #{{ compra.id }}</strong>
+                    <div style="font-size: 0.85rem; color: #64748b;">
+                        <i class="fas fa-calendar-alt"></i> {{ compra.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="background: #4f46e5; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 1rem;">
+                        Total: €{{ compra.total }}
+                    </span>
+                </div>
+            </div>
+            
+            {% if compra.proveedor %}
+            <div style="margin-bottom: 8px; font-size: 0.95rem;">
+                <i class="fas fa-user" style="color: #4f46e5; width: 20px;"></i> 
+                <strong>Proveedor:</strong> {{ compra.proveedor }}
+            </div>
+            {% endif %}
+            
+            {% if compra.observaciones %}
+            <div style="margin-bottom: 12px; font-size: 0.9rem; color: #475569;">
+                <i class="fas fa-comment" style="color: #4f46e5; width: 20px;"></i> 
+                {{ compra.observaciones }}
+            </div>
+            {% endif %}
+            
+            <div style="margin-top: 12px;">
+                <div style="font-weight: 600; font-size: 0.9rem; color: #1e293b; margin-bottom: 8px;">
+                    <i class="fas fa-boxes"></i> Productos comprados:
+                </div>
+                <div style="background: rgba(255,255,255,0.2); border-radius: 12px; padding: 8px; overflow-x: auto;">
+                    <table style="width: 100%; font-size: 0.9rem; border-collapse: collapse; min-width: 300px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                                <th style="text-align: left; padding: 8px 4px;">Producto</th>
+                                <th style="text-align: center; padding: 8px 4px;">Cantidad (kg)</th>
+                                <th style="text-align: center; padding: 8px 4px;">Precio €/kg</th>
+                                <th style="text-align: right; padding: 8px 4px;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in compra.detalles %}
+                            <tr style="border-bottom: 1px solid rgba(0,0,0,0.03);">
+                                <td style="padding: 8px 4px;">
+                                    {{ detalle.producto.nombre }}
+                                    <span style="font-size: 0.75rem; color: #64748b; display: block;">{{ detalle.producto.descripcion or '' }}</span>
+                                </td>
+                                <td style="text-align: center; padding: 8px 4px;">{{ detalle.cantidad }}</td>
+                                <td style="text-align: center; padding: 8px 4px;">{{ detalle.precio_unitario }}</td>
+                                <td style="text-align: right; padding: 8px 4px; font-weight: 500;">€{{ detalle.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr style="border-top: 2px solid rgba(0,0,0,0.08);">
+                                <td colspan="3" style="text-align: right; padding: 10px 4px; font-weight: 600;">Total compra:</td>
+                                <td style="text-align: right; padding: 10px 4px; font-weight: 700; color: #4f46e5;">€{{ compra.total }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 40px 20px; color: #64748b;">
+            <i class="fas fa-inbox" style="font-size: 3rem; display: block; margin-bottom: 16px;"></i>
+            No hay compras registradas aún.
+        </div>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('reportes') }}" class="btn btn-secondary" style="margin-top:16px;">
+    <i class="fas fa-arrow-left"></i> Volver a reportes
+</a>
+{% endblock %}

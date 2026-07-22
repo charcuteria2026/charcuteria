@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Principal{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-store-alt" style="background: none; -webkit-text-fill-color: #4f46e5; margin-right: 8px;"></i> Charcutería</h1>
+
+<!-- Tarjetas de acción: Compra y Venta -->
+<div class="action-grid">
+    <a href="{{ url_for('comprar') }}" class="action-card buy">
+        <span class="icon"><i class="fas fa-cart-plus"></i></span>
+        <span class="label">Compra</span>
+        <span class="sub-label">Registrar entrada</span>
+    </a>
+    <a href="{{ url_for('vender') }}" class="action-card sell">
+        <span class="icon"><i class="fas fa-hand-holding-usd"></i></span>
+        <span class="label">Venta</span>
+        <span class="sub-label">Registrar salida</span>
+    </a>
+</div>
+
+<!-- Accesos rápidos -->
+<h3><i class="fas fa-bolt"></i> Accesos Rápidos</h3>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-chart-bar"></i> Reportes</div>
+    <a href="{{ url_for('reportes') }}" class="btn btn-outline-primary">Ver Reportes</a>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-calendar-alt"></i> Cronograma</div>
+    <a href="{{ url_for('cronograma') }}" class="btn btn-outline-primary">Ver Cronograma</a>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-boxes"></i> Inventario</div>
+    <a href="{{ url_for('gestion_productos') }}" class="btn btn-outline-primary">Gestionar Inventario</a>
+</div>
+
+<div class="card">
+    <div class="card-title"><i class="fas fa-cog"></i> Configuración</div>
+    <a href="{{ url_for('configuracion') }}" class="btn btn-outline-primary">Ver Configuración</a>
+</div>
+
+<!-- Productos en stock -->
+<h3><i class="fas fa-boxes"></i> Stock actual</h3>
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>€/kg</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.precio_por_kilo }}</td>
+                <td>{{ p.stock_actual }} kg</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3">No hay productos registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
