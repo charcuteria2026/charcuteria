@@ -115,10 +115,41 @@ def reporte_compras():
     compras = Compra.query.order_by(Compra.fecha.desc()).all()
     return render_template('reporte_compras.html', compras=compras)
 
+@app.route('/reportes/compras/eliminar/<int:id>', methods=['POST'])
+def eliminar_compra(id):
+    try:
+        compra = Compra.query.get_or_404(id)
+        # Los detalles se eliminan automáticamente por cascade
+        db.session.delete(compra)
+        db.session.commit()
+        flash(f'Compra #{id} eliminada correctamente', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar compra: {str(e)}', 'danger')
+    return redirect(url_for('reporte_compras'))
+
 @app.route('/reportes/ventas')
 def reporte_ventas():
     ventas = Venta.query.order_by(Venta.fecha.desc()).all()
     return render_template('reporte_ventas.html', ventas=ventas)
+
+@app.route('/reportes/ventas/eliminar/<int:id>', methods=['POST'])
+def eliminar_venta(id):
+    try:
+        venta = Venta.query.get_or_404(id)
+        # Eliminar archivo de comprobante si existe
+        if venta.comprobante:
+            ruta = os.path.join(app.config['UPLOAD_FOLDER'], venta.comprobante)
+            if os.path.exists(ruta):
+                os.remove(ruta)
+        # Los detalles se eliminan automáticamente por cascade
+        db.session.delete(venta)
+        db.session.commit()
+        flash(f'Venta #{id} eliminada correctamente', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar venta: {str(e)}', 'danger')
+    return redirect(url_for('reporte_ventas'))
 
 @app.route('/ventas/<int:id>/pagar', methods=['GET', 'POST'])
 def pagar_venta(id):
