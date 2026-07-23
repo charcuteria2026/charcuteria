@@ -20,7 +20,7 @@
                 </div>
                 <div style="text-align: right;">
                     <span style="background: #4f46e5; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 1rem;">
-                        Total: €{{ compra.total }}
+                        Total: ${{ compra.total }}
                     </span>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                             <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
                                 <th style="text-align: left; padding: 8px 4px;">Producto</th>
                                 <th style="text-align: center; padding: 8px 4px;">Cantidad (kg)</th>
-                                <th style="text-align: center; padding: 8px 4px;">Precio €/kg</th>
+                                <th style="text-align: center; padding: 8px 4px;">Precio $/kg</th>
                                 <th style="text-align: right; padding: 8px 4px;">Subtotal</th>
                             </tr>
                         </thead>
@@ -62,14 +62,14 @@
                                 </td>
                                 <td style="text-align: center; padding: 8px 4px;">{{ detalle.cantidad }}</td>
                                 <td style="text-align: center; padding: 8px 4px;">{{ detalle.precio_unitario }}</td>
-                                <td style="text-align: right; padding: 8px 4px; font-weight: 500;">€{{ detalle.subtotal }}</td>
+                                <td style="text-align: right; padding: 8px 4px; font-weight: 500;">${{ detalle.subtotal }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr style="border-top: 2px solid rgba(0,0,0,0.08);">
                                 <td colspan="3" style="text-align: right; padding: 10px 4px; font-weight: 600;">Total compra:</td>
-                                <td style="text-align: right; padding: 10px 4px; font-weight: 700; color: #4f46e5;">€{{ compra.total }}</td>
+                                <td style="text-align: right; padding: 10px 4px; font-weight: 700; color: #4f46e5;">${{ compra.total }}</td>
                             </tr>
                         </tfoot>
                     </table>

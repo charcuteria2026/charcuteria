@@ -207,7 +207,7 @@ def exportar_excel():
     # Encabezados
     headers = [
         "ID Venta", "Fecha", "Cliente", "Teléfono", 
-        "Producto", "Cantidad (kg)", "Precio Unitario (€/kg)", 
+        "Producto", "Cantidad (kg)", "Precio Unitario ($/kg)", 
         "Subtotal", "Total Venta", "Pagado", "Comprobante"
     ]
     

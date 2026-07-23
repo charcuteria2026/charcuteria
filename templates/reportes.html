@@ -9,15 +9,15 @@
 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
     <div class="card" style="text-align: center; padding: 16px 8px; background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2);">
         <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Gastos</div>
-        <div style="font-size: 1.4rem; font-weight: 700; color: #ef4444;">€{{ "%.2f"|format(total_compras) }}</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: #ef4444;">${{ "%.2f"|format(total_compras) }}</div>
     </div>
     <div class="card" style="text-align: center; padding: 16px 8px; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2);">
         <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Ingresos</div>
-        <div style="font-size: 1.4rem; font-weight: 700; color: #059669;">€{{ "%.2f"|format(total_ventas) }}</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: #059669;">${{ "%.2f"|format(total_ventas) }}</div>
     </div>
     <div class="card" style="text-align: center; padding: 16px 8px; background: rgba(79,70,229,0.08); border-color: rgba(79,70,229,0.2);">
         <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Ganancia Neta</div>
-        <div style="font-size: 1.4rem; font-weight: 700; color: #4f46e5;">€{{ "%.2f"|format(ganancia_neta) }}</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: #4f46e5;">${{ "%.2f"|format(ganancia_neta) }}</div>
     </div>
 </div>
 

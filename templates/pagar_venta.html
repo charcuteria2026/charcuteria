@@ -11,7 +11,7 @@
     <div style="margin-bottom: 16px;">
         <p><strong>Cliente:</strong> {{ venta.cliente or 'Sin nombre' }}</p>
         <p><strong>Teléfono:</strong> {{ venta.telefono or 'Sin teléfono' }}</p>
-        <p><strong>Total:</strong> €{{ venta.total }}</p>
+        <p><strong>Total:</strong> ${{ venta.total }}</p>
         <p><strong>Fecha:</strong> {{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
     </div>
     
@@ -20,7 +20,7 @@
         <ul style="list-style: none; padding: 0;">
         {% for detalle in venta.detalles %}
             <li style="padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.04);">
-                {{ detalle.producto.nombre }} - {{ detalle.cantidad }} kg × €{{ detalle.precio_unitario }} = €{{ detalle.subtotal }}
+                {{ detalle.producto.nombre }} - {{ detalle.cantidad }} kg × ${{ detalle.precio_unitario }} = ${{ detalle.subtotal }}
             </li>
         {% endfor %}
         </ul>

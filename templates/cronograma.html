@@ -34,12 +34,12 @@
                 {% for detalle in venta.detalles %}
                     <li style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 0.95rem;">
                         <span>{{ detalle.producto.nombre }}</span>
-                        <span>{{ detalle.cantidad }} kg × €{{ detalle.precio_unitario }} = <strong>€{{ detalle.subtotal }}</strong></span>
+                        <span>{{ detalle.cantidad }} kg × ${{ detalle.precio_unitario }} = <strong>${{ detalle.subtotal }}</strong></span>
                     </li>
                 {% endfor %}
                 </ul>
                 <div style="text-align: right; font-size: 1.1rem; font-weight: 700; color: #0f172a;">
-                    Total: €{{ venta.total }}
+                    Total: ${{ venta.total }}
                 </div>
             </div>
             
