@@ -79,17 +79,17 @@
             <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
                 {% if venta.comprobante %}
                     <a href="{{ url_for('static', filename='uploads/comprobantes/' + venta.comprobante) }}" target="_blank" class="btn btn-outline-primary" style="flex: 1; background: transparent; border-color: #4f46e5; color: #4f46e5; padding: 8px 12px; font-size: 0.9rem;">
-                        <i class="fas fa-file"></i> Ver comprobante
+                        <i class="fas fa-file"></i> Ver
                     </a>
                 {% endif %}
                 <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; {% if venta.pagado %}background: rgba(16,185,129,0.15); color: #059669;{% else %}background: rgba(245,158,11,0.15); color: #d97706;{% endif %}">
-                    {% if venta.pagado %}Pagado{% else %}Pendiente{% endif %}
+                    {% if venta.pagado %}Pag{% else %}Pen{% endif %}
                 </span>
                 <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
                     <form method="POST" action="{{ url_for('eliminar_venta', id=venta.id) }}" 
                         onsubmit="return confirm('¿Estás seguro de eliminar la venta #{{ venta.id }}? Esta acción es irreversible.');">
                         <button type="submit" class="btn btn-danger" style="background: rgba(239,68,68,0.15); color:#ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fas fa-trash-alt"></i> Eliminar venta
+                            <i class="fas fa-trash-alt"></i> Eliminar
                         </button>
                     </form>
                 </div>
