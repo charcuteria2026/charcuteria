@@ -112,7 +112,7 @@ def reportes():
 @app.route('/reportes/compras')
 def reporte_compras():
     # Obtener todas las compras con sus detalles
-    compras = Compra.query.order_by(Compra.fecha.desc()).all()
+    compras = Compra.query.order_by(Compra.fecha.asc()).all()
     return render_template('reporte_compras.html', compras=compras)
 
 @app.route('/reportes/compras/eliminar/<int:id>', methods=['POST'])
@@ -130,7 +130,7 @@ def eliminar_compra(id):
 
 @app.route('/reportes/ventas')
 def reporte_ventas():
-    ventas = Venta.query.order_by(Venta.fecha.desc()).all()
+    ventas = Venta.query.order_by(Venta.fecha.asc()).all()
     return render_template('reporte_ventas.html', ventas=ventas)
 
 @app.route('/reportes/ventas/eliminar/<int:id>', methods=['POST'])
