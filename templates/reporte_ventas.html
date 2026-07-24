@@ -85,15 +85,15 @@
                 <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; {% if venta.pagado %}background: rgba(16,185,129,0.15); color: #059669;{% else %}background: rgba(245,158,11,0.15); color: #d97706;{% endif %}">
                     {% if venta.pagado %}Pagado{% else %}Pendiente{% endif %}
                 </span>
+                <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
+                    <form method="POST" action="{{ url_for('eliminar_venta', id=venta.id) }}" 
+                        onsubmit="return confirm('¿Estás seguro de eliminar la venta #{{ venta.id }}? Esta acción es irreversible.');">
+                        <button type="submit" class="btn btn-danger" style="background: rgba(239,68,68,0.15); color:#ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-trash-alt"></i> Eliminar venta
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
-        <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
-            <form method="POST" action="{{ url_for('eliminar_venta', id=venta.id) }}" 
-                onsubmit="return confirm('¿Estás seguro de eliminar la venta #{{ venta.id }}? Esta acción es irreversible.');">
-                <button type="submit" class="btn btn-danger" style="background: rgba(239,68,68,0.15); color:#ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
-                    <i class="fas fa-trash-alt"></i> Eliminar venta
-                </button>
-            </form>
         </div>
         {% endfor %}
     {% else %}
