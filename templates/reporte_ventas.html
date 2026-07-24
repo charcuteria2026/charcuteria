@@ -13,7 +13,7 @@
         <div class="reporte-item" style="margin-bottom: 24px; background: rgba(255,255,255,0.3); border-radius: 16px; padding: 16px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.4);">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
                 <div>
-                    <strong style="font-size: 1.1rem; color: #0f172a;">Venta #{{ venta.id }}</strong>
+                    <strong style="font-size: 1.1rem; color: #0f172a;">Venta #{{ loop.index }}</strong>
                     <div style="font-size: 0.85rem; color: #64748b;">
                         <i class="fas fa-calendar-alt"></i> {{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}
                     </div>
