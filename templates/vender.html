@@ -50,15 +50,15 @@
                 </div>
                 <div style="margin-bottom: 12px;">
                     <label style="font-weight: 500; display: block; margin-bottom: 4px;">Precio por kg ($)</label>
-                    <input type="text" class="form-control precio-unitario" value="0.00" readonly style="background: rgba(200,200,200,0.2);">
+                    <input type="text" class="form-control precio-unitario" value="0.000" readonly style="background: rgba(200,200,200,0.2);">
                 </div>
                 <div style="margin-bottom: 8px;">
                     <label style="font-weight: 500; display: block; margin-bottom: 4px;">Cantidad (kg) *</label>
-                    <input type="number" step="0.01" name="cantidad[]" class="form-control cantidad" placeholder="0.00" required>
+                    <input type="number" step="0.001" name="cantidad[]" class="form-control cantidad" placeholder="0.000" required>
                 </div>
                 <div style="margin-bottom: 8px;">
                     <label style="font-weight: 500; display: block; margin-bottom: 4px;">Subtotal ($)</label>
-                    <input type="text" class="form-control subtotal" value="0.00" readonly style="background: rgba(200,200,200,0.2);">
+                    <input type="text" class="form-control subtotal" value="0.000" readonly style="background: rgba(200,200,200,0.2);">
                 </div>
                 <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin: 16px 0;">
             </div>
@@ -104,8 +104,8 @@
                 const subtotal = precio * cantidad;
                 subtotalInput.value = subtotal.toFixed(2);
             } else {
-                precioInput.value = '0.00';
-                subtotalInput.value = '0.00';
+                precioInput.value = '0.000';
+                subtotalInput.value = '0.000';
             }
         }
 
@@ -129,7 +129,7 @@
             // Limpiar valores
             template.querySelectorAll('input').forEach(input => {
                 if (input.classList.contains('precio-unitario') || input.classList.contains('subtotal')) {
-                    input.value = '0.00';
+                    input.value = '0.000';
                 } else {
                     input.value = '';
                 }
