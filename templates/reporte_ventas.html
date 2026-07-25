@@ -76,23 +76,39 @@
                 </div>
             </div>
 
-            <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <div style="margin-top: 12px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: wrap;">
+                <!-- Comprobante (si existe) -->
                 {% if venta.comprobante %}
-                    <a href="{{ url_for('static', filename='uploads/comprobantes/' + venta.comprobante) }}" target="_blank" class="btn btn-outline-primary" style="flex: 1; background: transparent; border-color: #4f46e5; color: #4f46e5; padding: 8px 12px; font-size: 0.9rem;">
-                        <i class="fas fa-file"></i> Ver
+                    <a href="{{ url_for('static', filename='uploads/comprobantes/' + venta.comprobante) }}" target="_blank" 
+                       class="action-icon" style="text-decoration: none; color: #4f46e5; background: rgba(79,70,229,0.1); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; border: 1px solid rgba(79,70,229,0.2);">
+                        <i class="fas fa-file-pdf" style="font-size: 1.2rem;"></i>
                     </a>
                 {% endif %}
-                <span style="padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; {% if venta.pagado %}background: rgba(16,185,129,0.15); color: #059669;{% else %}background: rgba(245,158,11,0.15); color: #d97706;{% endif %}">
-                    {% if venta.pagado %}Pag{% else %}Pen{% endif %}
+
+                <!-- Estado (Pagado / Pendiente) -->
+                <span class="status-badge" style="width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem; 
+                    {% if venta.pagado %}
+                        background: rgba(16,185,129,0.15); color: #059669; border: 1px solid rgba(16,185,129,0.3);
+                    {% else %}
+                        background: rgba(245,158,11,0.15); color: #d97706; border: 1px solid rgba(245,158,11,0.3);
+                    {% endif %}">
+                    {% if venta.pagado %}
+                        <i class="fas fa-check-circle"></i>
+                    {% else %}
+                        <i class="fas fa-clock"></i>
+                    {% endif %}
                 </span>
-                <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
+
+                <!-- Eliminar (solo si está pendiente) -->
+                {% if not venta.pagado %}
                     <form method="POST" action="{{ url_for('eliminar_venta', id=venta.id) }}" 
-                        onsubmit="return confirm('¿Estás seguro de eliminar la venta #{{ venta.id }}? Esta acción es irreversible.');">
-                        <button type="submit" class="btn btn-danger" style="background: rgba(239,68,68,0.15); color:#ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fas fa-trash-alt"></i> Eliminar
+                          onsubmit="return confirm('¿Eliminar venta #{{ venta.id }}? Esta acción es irreversible.');" 
+                          style="display: inline-block; margin: 0;">
+                        <button type="submit" class="action-icon" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; color: #ef4444; cursor: pointer; transition: 0.2s; font-size: 1.2rem;">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     </form>
-                </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
