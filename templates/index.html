@@ -22,24 +22,23 @@
 <!-- Accesos rápidos -->
 <h3><i class="fas fa-bolt"></i> Accesos Rápidos</h3>
 
-<div class="card">
-    <div class="card-title"><i class="fas fa-calendar-alt"></i> Cronograma</div>
-    <a href="{{ url_for('cronograma') }}" class="btn btn-outline-primary">Ver Cronograma</a>
-</div>
-
-<div class="card">
-    <div class="card-title"><i class="fas fa-chart-bar"></i> Reportes</div>
-    <a href="{{ url_for('reportes') }}" class="btn btn-outline-primary">Ver Reportes</a>
-</div>
-
-<div class="card">
-    <div class="card-title"><i class="fas fa-boxes"></i> Inventario</div>
-    <a href="{{ url_for('gestion_productos') }}" class="btn btn-outline-primary">Gestionar Inventario</a>
-</div>
-
-<div class="card">
-    <div class="card-title"><i class="fas fa-cog"></i> Configuración</div>
-    <a href="{{ url_for('configuracion') }}" class="btn btn-outline-primary">Ver Configuración</a>
+<div class="quick-access-grid">
+    <a href="{{ url_for('cronograma') }}" class="quick-access-item">
+        <div class="quick-icon"><i class="fas fa-calendar-alt"></i></div>
+        <span class="quick-label">Cronograma</span>
+    </a>
+    <a href="{{ url_for('reportes') }}" class="quick-access-item">
+        <div class="quick-icon"><i class="fas fa-chart-bar"></i></div>
+        <span class="quick-label">Reportes</span>
+    </a>
+    <a href="{{ url_for('gestion_productos') }}" class="quick-access-item">
+        <div class="quick-icon"><i class="fas fa-boxes"></i></div>
+        <span class="quick-label">Inventario</span>
+    </a>
+    <a href="{{ url_for('configuracion') }}" class="quick-access-item">
+        <div class="quick-icon"><i class="fas fa-cog"></i></div>
+        <span class="quick-label">Configuración</span>
+    </a>
 </div>
 
 <!-- Productos en stock -->

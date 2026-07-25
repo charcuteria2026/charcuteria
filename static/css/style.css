@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 /* ===== RESET Y BASE ===== */
-/* ===== RESET Y BASE ===== */
 * {
     margin: 0;
     padding: 0;
@@ -334,6 +333,89 @@ tr:last-child td {
 }
 .text-center {
     text-align: center;
+}
+
+/* ===== ACCESOS RÁPIDOS (GRID 2 COLUMNAS) ===== */
+.quick-access-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0 24px;
+}
+
+.quick-access-item {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 20px 12px;
+    text-align: center;
+    text-decoration: none;
+    color: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    touch-action: manipulation;
+}
+
+.quick-access-item:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.quick-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(79, 70, 229, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #4f46e5;
+    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+.quick-access-item:hover .quick-icon {
+    background: rgba(79, 70, 229, 0.2);
+}
+
+.quick-label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #0f172a;
+    letter-spacing: 0.2px;
+}
+
+/* Colores diferenciados por sección (opcional) */
+.quick-access-item:nth-child(1) .quick-icon { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+.quick-access-item:nth-child(2) .quick-icon { background: rgba(79, 70, 229, 0.15); color: #4f46e5; }
+.quick-access-item:nth-child(3) .quick-icon { background: rgba(16, 185, 129, 0.15); color: #059669; }
+.quick-access-item:nth-child(4) .quick-icon { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+
+/* Para pantallas muy pequeñas (menos de 360px) */
+@media (max-width: 360px) {
+    .quick-access-grid {
+        gap: 12px;
+    }
+    .quick-access-item {
+        min-height: 100px;
+        padding: 16px 8px;
+    }
+    .quick-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.6rem;
+    }
+    .quick-label {
+        font-size: 0.9rem;
+    }
 }
 
 /* ===== RESPONSIVE ===== */
