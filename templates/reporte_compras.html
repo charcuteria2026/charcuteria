@@ -77,12 +77,13 @@
             </div>
         </div>
         
-        <div style="margin-top: 12px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: wrap;">
-            <form method="POST" action="{{ url_for('eliminar_venta', id=venta.id) }}" 
-                    onsubmit="return confirm('¿Eliminar venta #{{ venta.id }}? Esta acción es irreversible.');" 
-                    style="display: inline-block; margin: 0;">
-                <button type="submit" class="action-icon" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; color: #ef4444; cursor: pointer; transition: 0.2s; font-size: 1.2rem;">
-                            <i class="fas fa-trash-alt"></i>
+        <!-- Botón eliminar (siempre visible) -->
+        <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+            <form method="POST" action="{{ url_for('eliminar_compra', id=compra.id) }}" 
+                  onsubmit="return confirm('¿Eliminar compra #{{ loop.index }}? Esta acción es irreversible.');">
+                <button type="submit" class="action-icon" 
+                        style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; color: #ef4444; cursor: pointer; transition: 0.2s; font-size: 1.2rem;">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
             </form>
         </div>
