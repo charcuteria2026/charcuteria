@@ -468,3 +468,14 @@ tr:last-child td {
         margin-bottom: 0;
     }
 }
+/* Barra de búsqueda */
+.search-bar input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+}
+.search-bar button:hover {
+    background: rgba(79,70,229,0.25);
+}
+.search-bar a:hover {
+    background: rgba(239,68,68,0.2);
+}

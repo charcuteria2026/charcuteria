@@ -130,8 +130,16 @@ def eliminar_compra(id):
 
 @app.route('/reportes/ventas')
 def reporte_ventas():
-    ventas = Venta.query.order_by(Venta.fecha.asc()).all()
-    return render_template('reporte_ventas.html', ventas=ventas)
+    query = request.args.get('q', '').strip()
+    if query:
+        # Búsqueda por cliente o teléfono (insensible a mayúsculas)
+        ventas = Venta.query.filter(
+            (Venta.cliente.ilike(f'%{query}%')) | 
+            (Venta.telefono.ilike(f'%{query}%'))
+        ).order_by(Venta.fecha.asc()).all()
+    else:
+        ventas = Venta.query.order_by(Venta.fecha.asc()).all()
+    return render_template('reporte_ventas.html', ventas=ventas, query=query)
 
 @app.route('/reportes/ventas/eliminar/<int:id>', methods=['POST'])
 def eliminar_venta(id):
