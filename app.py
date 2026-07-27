@@ -11,6 +11,7 @@ from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 import io
 from flask import send_file
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -111,9 +112,26 @@ def reportes():
 
 @app.route('/reportes/compras')
 def reporte_compras():
-    query = request.args.get('q', '').strip()
-    compras = Compra.query.order_by(Compra.fecha.asc()).all()
-    return render_template('reporte_compras.html', compras=compras, query=query)
+    fecha_desde = request.args.get('fecha_desde', '').strip()
+    fecha_hasta = request.args.get('fecha_hasta', '').strip()
+    
+    query = Compra.query
+    if fecha_desde:
+        try:
+            fecha_desde_dt = datetime.strptime(fecha_desde, '%Y-%m-%d')
+            query = query.filter(Compra.fecha >= fecha_desde_dt)
+        except:
+            pass
+    if fecha_hasta:
+        try:
+            fecha_hasta_dt = datetime.strptime(fecha_hasta, '%Y-%m-%d')
+            fecha_hasta_dt = fecha_hasta_dt.replace(hour=23, minute=59, second=59)
+            query = query.filter(Compra.fecha <= fecha_hasta_dt)
+        except:
+            pass
+    
+    compras = query.order_by(Compra.fecha.asc()).all()
+    return render_template('reporte_compras.html', compras=compras, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta)
 
 @app.route('/reportes/compras/eliminar/<int:id>', methods=['POST'])
 def eliminar_compra(id):
@@ -130,10 +148,28 @@ def eliminar_compra(id):
 
 @app.route('/reportes/ventas')
 def reporte_ventas():
-    query = request.args.get('q', '').strip()
-    # Obtener todas las ventas (sin filtrar)
-    ventas = Venta.query.order_by(Venta.fecha.asc()).all()
-    return render_template('reporte_ventas.html', ventas=ventas, query=query)
+    # Obtener parámetros de fecha (desde/hasta)
+    fecha_desde = request.args.get('fecha_desde', '').strip()
+    fecha_hasta = request.args.get('fecha_hasta', '').strip()
+    
+    query = Venta.query
+    if fecha_desde:
+        try:
+            fecha_desde_dt = datetime.strptime(fecha_desde, '%Y-%m-%d')
+            query = query.filter(Venta.fecha >= fecha_desde_dt)
+        except:
+            pass
+    if fecha_hasta:
+        try:
+            fecha_hasta_dt = datetime.strptime(fecha_hasta, '%Y-%m-%d')
+            # Incluir todo el día hasta las 23:59:59
+            fecha_hasta_dt = fecha_hasta_dt.replace(hour=23, minute=59, second=59)
+            query = query.filter(Venta.fecha <= fecha_hasta_dt)
+        except:
+            pass
+    
+    ventas = query.order_by(Venta.fecha.asc()).all()
+    return render_template('reporte_ventas.html', ventas=ventas, fecha_desde=fecha_desde, fecha_hasta=fecha_hasta)
 
 @app.route('/reportes/ventas/eliminar/<int:id>', methods=['POST'])
 def eliminar_venta(id):
