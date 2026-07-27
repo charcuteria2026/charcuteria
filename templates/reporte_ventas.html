@@ -6,23 +6,15 @@
 <h1><i class="fas fa-hand-holding-usd" style="background: none; -webkit-text-fill-color: #4f46e5; margin-right: 8px;"></i> Reporte de Ventas</h1>
 
 <!-- Filtro por fecha -->
-<div class="filter-bar" style="margin: 12px 0 16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; background: rgba(255,255,255,0.3); backdrop-filter: blur(4px); padding: 12px 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.4);">
-    <form method="GET" action="{{ url_for('reporte_ventas') }}" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%;">
-        <div style="display: flex; align-items: center; gap: 6px; flex: 1 1 120px;">
-            <label for="fecha_desde" style="font-size: 0.85rem; color: #475569;">Desde</label>
-            <input type="date" id="fecha_desde" name="fecha_desde" value="{{ fecha_desde if fecha_desde else '' }}" 
-                   style="flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.5); backdrop-filter: blur(4px); font-size: 0.9rem; outline: none; min-width: 120px;">
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px; flex: 1 1 120px;">
-            <label for="fecha_hasta" style="font-size: 0.85rem; color: #475569;">Hasta</label>
-            <input type="date" id="fecha_hasta" name="fecha_hasta" value="{{ fecha_hasta if fecha_hasta else '' }}" 
-                   style="flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.5); backdrop-filter: blur(4px); font-size: 0.9rem; outline: none; min-width: 120px;">
-        </div>
-        <button type="submit" style="background: rgba(79,70,229,0.15); border: none; border-radius: 30px; padding: 8px 18px; color: #4f46e5; font-size: 0.95rem; cursor: pointer; backdrop-filter: blur(4px); transition: 0.2s; white-space: nowrap;">
-            <i class="fas fa-filter"></i> Filtrar
+<div class="search-bar" style="margin: 12px 0 16px; display: flex; gap: 8px; align-items: center;">
+    <form method="GET" action="{{ url_for('reporte_ventas') }}" style="flex: 1; display: flex; gap: 8px; flex-wrap: wrap;">
+        <input type="date" name="fecha" value="{{ request.args.get('fecha', '') }}" 
+               style="flex: 1; min-width: 150px; padding: 10px 16px; border-radius: 30px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.5); backdrop-filter: blur(4px); font-size: 0.95rem; transition: 0.2s; outline: none;">
+        <button type="submit" style="background: rgba(79,70,229,0.15); border: none; border-radius: 30px; padding: 0 18px; color: #4f46e5; font-size: 1rem; cursor: pointer; backdrop-filter: blur(4px); transition: 0.2s; white-space: nowrap;">
+            <i class="fas fa-calendar-alt"></i> Filtrar
         </button>
-        {% if fecha_desde or fecha_hasta %}
-        <a href="{{ url_for('reporte_ventas') }}" style="background: rgba(239,68,68,0.1); border: none; border-radius: 30px; padding: 8px 14px; color: #ef4444; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; backdrop-filter: blur(4px); transition: 0.2s;">
+        {% if request.args.get('fecha') %}
+        <a href="{{ url_for('reporte_ventas') }}" style="background: rgba(239,68,68,0.1); border: none; border-radius: 30px; padding: 0 14px; color: #ef4444; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; backdrop-filter: blur(4px); transition: 0.2s;">
             <i class="fas fa-times"></i> Limpiar
         </a>
         {% endif %}
@@ -37,7 +29,7 @@
         <div class="reporte-item" style="margin-bottom: 24px; background: rgba(255,255,255,0.3); border-radius: 16px; padding: 16px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.4);">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
                 <div>
-                    <strong style="font-size: 1.1rem; color: #0f172a;">Venta #{{ loop.index }}</strong>
+                    <strong style="font-size: 1.1rem; color: #0f172a;">Venta #{{ venta.id }}</strong>
                     <div style="font-size: 0.85rem; color: #64748b;">
                         <i class="fas fa-calendar-alt"></i> {{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}
                     </div>
@@ -127,7 +119,7 @@
                 <!-- Eliminar (solo si está pendiente) -->
                 {% if not venta.pagado %}
                     <form method="POST" action="{{ url_for('eliminar_venta', id=venta.id) }}" 
-                          onsubmit="return confirm('¿Eliminar venta #{{ loop.index }}? Esta acción es irreversible.');" 
+                          onsubmit="return confirm('¿Eliminar venta #{{ venta.id }}? Esta acción es irreversible.');" 
                           style="display: inline-block; margin: 0;">
                         <button type="submit" class="action-icon" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; color: #ef4444; cursor: pointer; transition: 0.2s; font-size: 1.2rem;">
                             <i class="fas fa-trash-alt"></i>
@@ -150,44 +142,22 @@
 </a>
 
 <script>
-function buscarVenta() {
-    var input = document.getElementById('searchInputVentas');
-    var query = input.value.trim().toLowerCase();
-    var items = document.querySelectorAll('.venta-item'); // Asumiendo que cada venta tiene clase 'venta-item'
-    var found = false;
-    var clearBtn = document.getElementById('clearBtnVentas');
-
-    if (query === '') {
-        limpiarBusquedaVentas();
-        return;
-    }
-
-    for (var i = 0; i < items.length; i++) {
-        var text = items[i].textContent.toLowerCase();
-        if (text.includes(query)) {
-            items[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            // Resaltar (opcional)
-            items[i].style.transition = 'background 0.5s';
-            items[i].style.background = 'rgba(79,70,229,0.15)';
-            setTimeout(function(el) { el.style.background = ''; }, 2000, items[i]);
-            found = true;
-            break;
+    document.addEventListener('DOMContentLoaded', function() {
+        const highlightId = {{ highlight|tojson }};
+        if (highlightId) {
+            const target = document.getElementById('venta-' + highlightId);
+            if (target) {
+                // Desplazamiento suave al elemento
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Resaltar con un fondo temporal
+                target.style.transition = 'background 0.5s';
+                target.style.background = 'rgba(79,70,229,0.15)';
+                setTimeout(() => {
+                    target.style.background = '';
+                }, 2000);
+            }
         }
-    }
-    if (!found) {
-        alert('No se encontraron ventas que coincidan con la búsqueda.');
-    }
-    clearBtn.style.display = 'inline-flex';
-}
-
-function limpiarBusquedaVentas() {
-    document.getElementById('searchInputVentas').value = '';
-    document.getElementById('clearBtnVentas').style.display = 'none';
-    // Opcional: quitar resaltados
-    var items = document.querySelectorAll('.venta-item');
-    items.forEach(function(el) { el.style.background = ''; });
-    // Scroll al principio
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+    });
 </script>
+
 {% endblock %}
