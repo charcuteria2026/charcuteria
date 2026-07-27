@@ -47,11 +47,10 @@
                 <strong>Cliente:</strong> {{ venta.cliente }}
             </div>
             {% endif %}
-            
-            {% if venta.observaciones %}
-            <div style="margin-bottom: 12px; font-size: 0.9rem; color: #475569;">
-                <i class="fas fa-comment" style="color: #059669; width: 20px;"></i> 
-                {{ venta.observaciones }}
+            {% if venta.telefono %}
+            <div style="margin-bottom: 8px; font-size: 0.95rem;">
+                <i class="fas fa-phone" style="color: #059669; width: 20px;"></i> 
+                <strong>Teléfono:</strong> {{ venta.telefono }}
             </div>
             {% endif %}
             
