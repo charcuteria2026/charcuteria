@@ -112,14 +112,7 @@ def reportes():
 @app.route('/reportes/compras')
 def reporte_compras():
     query = request.args.get('q', '').strip()
-    if query:
-        # Búsqueda por proveedor o descripción (observaciones)
-        compras = Compra.query.filter(
-            (Compra.proveedor.ilike(f'%{query}%')) | 
-            (Compra.observaciones.ilike(f'%{query}%'))
-        ).order_by(Compra.fecha.asc()).all()
-    else:
-        compras = Compra.query.order_by(Compra.fecha.asc()).all()
+    compras = Compra.query.order_by(Compra.fecha.asc()).all()
     return render_template('reporte_compras.html', compras=compras, query=query)
 
 @app.route('/reportes/compras/eliminar/<int:id>', methods=['POST'])
@@ -138,14 +131,8 @@ def eliminar_compra(id):
 @app.route('/reportes/ventas')
 def reporte_ventas():
     query = request.args.get('q', '').strip()
-    if query:
-        # Búsqueda por cliente o teléfono (insensible a mayúsculas)
-        ventas = Venta.query.filter(
-            (Venta.cliente.ilike(f'%{query}%')) | 
-            (Venta.telefono.ilike(f'%{query}%'))
-        ).order_by(Venta.fecha.asc()).all()
-    else:
-        ventas = Venta.query.order_by(Venta.fecha.asc()).all()
+    # Obtener todas las ventas (sin filtrar)
+    ventas = Venta.query.order_by(Venta.fecha.asc()).all()
     return render_template('reporte_ventas.html', ventas=ventas, query=query)
 
 @app.route('/reportes/ventas/eliminar/<int:id>', methods=['POST'])
