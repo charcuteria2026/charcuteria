@@ -12,9 +12,11 @@ from openpyxl.utils import get_column_letter
 import io
 from flask import send_file
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 
+LOCAL_TIMEZONE = pytz.timezone('America/Caracas')
 UPLOAD_FOLDER = 'static/uploads/comprobantes'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
@@ -23,6 +25,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def local_now():
+    return datetime.now(LOCAL_TIMEZONE)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://u7r1sgp7zumpg5x4:1gFt1ukpHu89SQvvgiWV@bnqkyflugf81nksewztz-mysql.services.clever-cloud.com:3306/bnqkyflugf81nksewztz'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -45,7 +50,7 @@ class Producto(db.Model):
 class Compra(db.Model):
     __tablename__ = 'compras'
     id = db.Column(db.Integer, primary_key=True)
-    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+    fecha = db.Column(db.DateTime, default=local_now)
     proveedor = db.Column(db.String(150))
     total = db.Column(db.Numeric(10,2), default=0.00)
     observaciones = db.Column(db.Text)
