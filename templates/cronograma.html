@@ -23,7 +23,7 @@
                         Pendiente
                     </span>
                     <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">
-                        {{ venta.fecha.strftime('%d/%m/%Y %H:%M') }}
+                        {{ venta.fecha|localdate('%d/%m/%Y %H:%M') }}
                     </div>
                 </div>
             </div>
