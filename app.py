@@ -111,9 +111,16 @@ def reportes():
 
 @app.route('/reportes/compras')
 def reporte_compras():
-    # Obtener todas las compras con sus detalles
-    compras = Compra.query.order_by(Compra.fecha.asc()).all()
-    return render_template('reporte_compras.html', compras=compras)
+    query = request.args.get('q', '').strip()
+    if query:
+        # Búsqueda por proveedor o descripción (observaciones)
+        compras = Compra.query.filter(
+            (Compra.proveedor.ilike(f'%{query}%')) | 
+            (Compra.observaciones.ilike(f'%{query}%'))
+        ).order_by(Compra.fecha.asc()).all()
+    else:
+        compras = Compra.query.order_by(Compra.fecha.asc()).all()
+    return render_template('reporte_compras.html', compras=compras, query=query)
 
 @app.route('/reportes/compras/eliminar/<int:id>', methods=['POST'])
 def eliminar_compra(id):

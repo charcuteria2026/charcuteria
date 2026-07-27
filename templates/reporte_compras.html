@@ -7,15 +7,15 @@
 
 <!-- Barra de búsqueda (no invasiva) -->
 <div class="search-bar" style="margin: 12px 0 16px; display: flex; gap: 8px; align-items: center;">
-    <form method="GET" action="{{ url_for('reporte_ventas') }}" style="flex: 1; display: flex; gap: 8px;">
+    <form method="GET" action="{{ url_for('reporte_compras') }}" style="flex: 1; display: flex; gap: 8px;">
         <input type="text" name="q" value="{{ query if query else '' }}" 
-               placeholder="Buscar por cliente o teléfono..." 
+               placeholder="Buscar por proveedor o observaciones..." 
                style="flex: 1; padding: 10px 16px; border-radius: 30px; border: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.5); backdrop-filter: blur(4px); font-size: 0.95rem; transition: 0.2s; outline: none;">
         <button type="submit" style="background: rgba(79,70,229,0.15); border: none; border-radius: 30px; padding: 0 18px; color: #4f46e5; font-size: 1rem; cursor: pointer; backdrop-filter: blur(4px); transition: 0.2s; white-space: nowrap;">
             <i class="fas fa-search"></i> Buscar
         </button>
         {% if query %}
-        <a href="{{ url_for('reporte_ventas') }}" style="background: rgba(239,68,68,0.1); border: none; border-radius: 30px; padding: 0 14px; color: #ef4444; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; backdrop-filter: blur(4px); transition: 0.2s;">
+        <a href="{{ url_for('reporte_compras') }}" style="background: rgba(239,68,68,0.1); border: none; border-radius: 30px; padding: 0 14px; color: #ef4444; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; backdrop-filter: blur(4px); transition: 0.2s;">
             <i class="fas fa-times"></i> Limpiar
         </a>
         {% endif %}
