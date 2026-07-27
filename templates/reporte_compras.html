@@ -31,7 +31,7 @@
                 <div>
                     <strong style="font-size: 1.1rem; color: #0f172a;">Compra #{{ compra.id }}</strong>
                     <div style="font-size: 0.85rem; color: #64748b;">
-                        <i class="fas fa-calendar-alt"></i> {{ compra.fecha.strftime('%d/%m/%Y %H:%M') }}
+                        <i class="fas fa-calendar-alt"></i> {{ compra.fecha|localdate('%d/%m/%Y %H:%M') }}
                     </div>
                 </div>
                 <div style="text-align: right;">

@@ -16,7 +16,14 @@ import pytz
 
 app = Flask(__name__)
 
-LOCAL_TIMEZONE = pytz.timezone('America/Caracas')
+@app.template_filter('localdate')
+def localdate_filter(utc_dt, fmt='%d/%m/%Y %H:%M'):
+    if utc_dt is None:
+        return ''
+    local_dt = utc_to_ve(utc_dt)
+    return local_dt.strftime(fmt)
+
+TZ_VE = pytz.timezone('America/Caracas')
 UPLOAD_FOLDER = 'static/uploads/comprobantes'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
@@ -26,8 +33,13 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def local_now():
-    return datetime.now(LOCAL_TIMEZONE)
+def now_utc():
+    return datetime.now(timezone.utc)
+
+def utc_to_ve(utc_dt):
+    if utc_dt.tzinfo is None:
+        utc_dt = utc_dt.replace(tzinfo=timezone.utc)
+    return utc_dt.astimezone(TZ_VE)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://u7r1sgp7zumpg5x4:1gFt1ukpHu89SQvvgiWV@bnqkyflugf81nksewztz-mysql.services.clever-cloud.com:3306/bnqkyflugf81nksewztz'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -50,7 +62,7 @@ class Producto(db.Model):
 class Compra(db.Model):
     __tablename__ = 'compras'
     id = db.Column(db.Integer, primary_key=True)
-    fecha = db.Column(db.DateTime, default=local_now)
+    fecha = db.Column(db.DateTime, default=now_utc)
     proveedor = db.Column(db.String(150))
     total = db.Column(db.Numeric(10,2), default=0.00)
     observaciones = db.Column(db.Text)
@@ -69,7 +81,7 @@ class DetalleCompra(db.Model):
 class Venta(db.Model):
     __tablename__ = 'ventas'
     id = db.Column(db.Integer, primary_key=True)
-    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+    fecha = db.Column(db.DateTime, default=now_utc)
     cliente = db.Column(db.String(150))
     telefono = db.Column(db.String(20))           # NUEVO
     total = db.Column(db.Numeric(10,2), default=0.00)
@@ -120,15 +132,24 @@ def reporte_compras():
     fecha_str = request.args.get('fecha', '').strip()
     highlight = request.args.get('highlight', type=int)
     
+    # Obtener todas las compras ordenadas por fecha (UTC)
     compras = Compra.query.order_by(Compra.fecha.asc()).all()
     
     if fecha_str:
         try:
-            fecha_buscar = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+            # Fecha seleccionada en formato local (sin hora)
+            fecha_local = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+            
+            # Convertir fecha local a rango UTC (inicio y fin del día en UTC)
+            # Recordar que Venezuela es UTC-4, por lo que el día en UTC comienza 4 horas antes
+            inicio_utc = TZ_VE.localize(datetime.combine(fecha_local, datetime.min.time())).astimezone(timezone.utc).replace(tzinfo=None)
+            fin_utc = TZ_VE.localize(datetime.combine(fecha_local, datetime.max.time())).astimezone(timezone.utc).replace(tzinfo=None)
+            
+            # Buscar la primera compras en ese rango UTC
             encontrada = None
-            for c in compras:
-                if c.fecha.date() == fecha_buscar:
-                    encontrada = c
+            for v in compras:
+                if inicio_utc <= v.fecha <= fin_utc:
+                    encontrada = v
                     break
             if encontrada:
                 return redirect(url_for('reporte_compras', highlight=encontrada.id))
@@ -157,16 +178,23 @@ def reporte_ventas():
     fecha_str = request.args.get('fecha', '').strip()
     highlight = request.args.get('highlight', type=int)
     
-    # Obtener TODAS las ventas (sin filtrar) para mantener orden y numeración
+    # Obtener todas las ventas ordenadas por fecha (UTC)
     ventas = Venta.query.order_by(Venta.fecha.asc()).all()
     
     if fecha_str:
         try:
-            fecha_buscar = datetime.strptime(fecha_str, '%Y-%m-%d').date()
-            # Buscar la primera venta de esa fecha
+            # Fecha seleccionada en formato local (sin hora)
+            fecha_local = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+            
+            # Convertir fecha local a rango UTC (inicio y fin del día en UTC)
+            # Recordar que Venezuela es UTC-4, por lo que el día en UTC comienza 4 horas antes
+            inicio_utc = TZ_VE.localize(datetime.combine(fecha_local, datetime.min.time())).astimezone(timezone.utc).replace(tzinfo=None)
+            fin_utc = TZ_VE.localize(datetime.combine(fecha_local, datetime.max.time())).astimezone(timezone.utc).replace(tzinfo=None)
+            
+            # Buscar la primera venta en ese rango UTC
             encontrada = None
             for v in ventas:
-                if v.fecha.date() == fecha_buscar:
+                if inicio_utc <= v.fecha <= fin_utc:
                     encontrada = v
                     break
             if encontrada:
