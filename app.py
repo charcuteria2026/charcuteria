@@ -11,7 +11,7 @@ from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 import io
 from flask import send_file
-from datetime import datetime
+from datetime import datetime, timezone
 import pytz
 
 app = Flask(__name__)
@@ -34,9 +34,10 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def now_utc():
-    return datetime.now(timezone.utc)
+    return datetime.utcnow()
 
 def utc_to_ve(utc_dt):
+    # Si no tiene zona horaria, asumimos UTC
     if utc_dt.tzinfo is None:
         utc_dt = utc_dt.replace(tzinfo=timezone.utc)
     return utc_dt.astimezone(TZ_VE)

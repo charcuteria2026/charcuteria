@@ -26,7 +26,7 @@
     
     {% if compras %}
         {% for compra in compras %}
-        <div class="reporte-item" style="margin-bottom: 24px; background: rgba(255,255,255,0.3); border-radius: 16px; padding: 16px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.4);">
+        <div class="reporte-item" id="compra-{{ compra.id }}" style="margin-bottom: 24px; background: rgba(255,255,255,0.3); border-radius: 16px; padding: 16px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.4);">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
                 <div>
                     <strong style="font-size: 1.1rem; color: #0f172a;">Compra #{{ compra.id }}</strong>
