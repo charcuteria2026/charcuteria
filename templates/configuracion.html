@@ -32,12 +32,6 @@
             </button>
         </form>
         
-        <form method="POST" action="{{ url_for('vaciar_comprobantes') }}" style="display: inline-block;">
-            <button type="submit" class="btn btn-secondary" style="background: rgba(239,68,68,0.1); color:#ef4444; border-color: rgba(239,68,68,0.2);" onclick="return confirm('¿Estás seguro de vaciar los comprobantes de pago?')">
-                <i class="fas fa-file"></i> Vaciar comprobantes de pago
-            </button>
-        </form>
-        
         <form method="POST" action="{{ url_for('vaciar_todo') }}" style="display: inline-block;">
             <button type="submit" class="btn btn-secondary" style="background: rgba(239,68,68,0.25); color:#dc2626; border-color: rgba(239,68,68,0.4); font-weight: 700;" onclick="return confirm('¿Estás seguro de vaciar TODO el sistema? (Compras, Ventas y Comprobantes) Esta acción es irreversible.')">
                 <i class="fas fa-radiation"></i> Vaciar todo el sistema

@@ -72,7 +72,7 @@
                             {% for detalle in venta.detalles %}
                             <tr style="border-bottom: 1px solid rgba(0,0,0,0.03);">
                                 <td style="padding: 8px 4px;">
-                                    {{ detalle.producto.nombre }}
+                                    {{ detalle.nombre_producto }}
                                     <span style="font-size: 0.75rem; color: #64748b; display: block;">{{ detalle.producto.descripcion or '' }}</span>
                                 </td>
                                 <td style="text-align: center; padding: 8px 4px;">{{ detalle.cantidad }}</td>
@@ -106,14 +106,6 @@
                         <i class="fas fa-clock"></i>
                     {% endif %}
                 </span>
-                
-                <!-- Comprobante (si existe) -->
-                {% if venta.comprobante %}
-                    <a href="{{ url_for('static', filename='uploads/comprobantes/' + venta.comprobante) }}" target="_blank" 
-                       class="action-icon" style="text-decoration: none; color: #4f46e5; background: rgba(79,70,229,0.1); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; border: 1px solid rgba(79,70,229,0.2);">
-                        <i class="fas fa-file-pdf" style="font-size: 1.2rem;"></i>
-                    </a>
-                {% endif %}
 
                 <!-- Eliminar (solo si está pendiente) -->
                 {% if not venta.pagado %}

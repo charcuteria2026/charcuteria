@@ -99,6 +99,7 @@ class DetalleVenta(db.Model):
     cantidad = db.Column(db.Numeric(10, 3), nullable=False)
     precio_unitario = db.Column(db.Numeric(10,2), nullable=False)
     subtotal = db.Column(db.Numeric(10,2), nullable=False)
+    nombre_producto = db.Column(db.String(100), nullable=False)
     producto = db.relationship('Producto')
 
 # ---------- RUTAS ----------
@@ -607,7 +608,8 @@ def vender():
                 id_producto=producto.id,
                 cantidad=cant,
                 precio_unitario=precio_unitario,
-                subtotal=subtotal
+                subtotal=subtotal,
+                nombre_producto=producto.nombre
             )
             db.session.add(detalle)
             # 🔽 AHORA AMBOS SON FLOAT

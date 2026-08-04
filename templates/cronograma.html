@@ -33,7 +33,7 @@
                 <ul style="list-style: none; padding: 0; margin: 6px 0 12px 0;">
                 {% for detalle in venta.detalles %}
                     <li style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 0.95rem;">
-                        <span>{{ detalle.producto.nombre }}</span>
+                        <span>{{ detalle.nombre_producto }}</span>
                         <span>{{ detalle.cantidad }} kg × ${{ detalle.precio_unitario }} = <strong>${{ detalle.subtotal }}</strong></span>
                     </li>
                 {% endfor %}
